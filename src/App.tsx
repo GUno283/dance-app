@@ -1,30 +1,26 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AppLayout from './components/layout/AppLayout';
-// Pages
-import DashboardPage from './pages/DashboardPage';
-import EditorPage from './pages/EditorPage';
-import ViewerPage from './pages/ViewerPage';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import ContextMenu from './components/ui/ContextMenu';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Editor from './pages/Editor';
+import FormationSheet from './pages/FormationSheet';
+import { ContextMenu } from './components/common/ContextMenu';
+import { Toast } from './components/common/Toast';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
-const App: React.FC = () => {
-  return (
-    <ErrorBoundary>
-      <ContextMenu />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<AppLayout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="projects/:projectId/editor" element={<EditorPage />} />
-            <Route path="projects/:projectId/viewer" element={<ViewerPage />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </ErrorBoundary>
-  );
-};
+// HashRouter: 静的ホスティング (GitHub Pages など) でもリロードで 404 にならない
+const App: React.FC = () => (
+  <ErrorBoundary>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/p/:projectId" element={<Editor />} />
+        <Route path="/p/:projectId/sheet" element={<FormationSheet />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </HashRouter>
+    <ContextMenu />
+    <Toast />
+  </ErrorBoundary>
+);
 
 export default App;
